@@ -15,7 +15,11 @@
 
 ## 📋 Tóm tắt
 
- Amazon OpenSearch Service đã ra mắt AI Search Flow Builder, một công cụ trực quan cho phép các nhà phát triển thiết kế và triển khai các luồng tìm kiếm AI mà không cần xây dựng middleware tùy chỉnh phức tạp. Flow Builder hỗ trợ hai loại luồng chính: luồng nhập (ingest flows) để làm phong phú dữ liệu khi lập chỉ mục, và luồng tìm kiếm (search flows) để xử lý động các yêu cầu và kết quả tìm kiếm. Công cụ này tích hợp với các dịch vụ AI như Amazon Bedrock, SageMaker, OpenAI, và Cohere, cho phép xuất và triển khai luồng trên bất kỳ cụm OpenSearch 2.19+ nào. Bài viết trình bày hai tình huống thực tế: nâng cấp hệ thống tìm kiếm từ khóa cũ thành tìm kiếm ngữ nghĩa mà không cần thay đổi mã client, và xây dựng hệ thống tìm kiếm hình ảnh đa phương thức sử dụng AI tạo sinh.
+ Amazon OpenSearch Service đã ra mắt AI Search Flow Builder, một công cụ trực quan cho phép các nhà phát triển thiết kế và triển khai các luồng tìm kiếm AI mà 
+ không cần xây dựng middleware tùy chỉnh phức tạp. Flow Builder hỗ trợ hai loại luồng chính: luồng nhập (ingest flows) để làm phong phú dữ liệu khi lập chỉ mục, 
+ và luồng tìm kiếm (search flows) để xử lý động các yêu cầu và kết quả tìm kiếm. Công cụ này tích hợp với các dịch vụ AI như Amazon Bedrock, SageMaker, OpenAI, 
+ và Cohere, cho phép xuất và triển khai luồng trên bất kỳ cụm OpenSearch 2.19+ nào. Bài viết trình bày hai tình huống thực tế: nâng cấp hệ thống tìm kiếm từ khóa 
+ cũ thành tìm kiếm ngữ nghĩa mà không cần thay đổi mã client, và xây dựng hệ thống tìm kiếm hình ảnh đa phương thức sử dụng AI tạo sinh.
 
 **🎯 Đối tượng đọc**: Nhà phát triển phần mềm, Kiến trúc sư giải pháp, Chuyên gia AI/ML  
 **📊 Độ khó**: Intermediate/Advanced  
@@ -81,7 +85,8 @@
 
 ## 💬 Ghi chú của người dịch
 
-Bài viết này là một technical blog post chuyên sâu về AI Search Flow Builder - tính năng mới của Amazon OpenSearch Service được công bố ngày 02/05/2025. Quá trình dịch từ bài gốc tiếng Anh sang tiếng Việt đòi hỏi sự cân bằng tinh tế giữa độ chính xác kỹ thuật và khả năng tiếp cận của độc giả Việt Nam.
+Bài viết này là một technical blog post chuyên sâu về AI Search Flow Builder - tính năng mới của Amazon OpenSearch Service được công bố ngày 02/05/2025. 
+Quá trình dịch từ bài gốc tiếng Anh sang tiếng Việt đòi hỏi sự cân bằng tinh tế giữa độ chính xác kỹ thuật và khả năng tiếp cận của độc giả Việt Nam.
 
 ### Challenges trong quá trình dịch
 - **Technical Terms**: 
