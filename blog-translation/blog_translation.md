@@ -86,15 +86,156 @@ vì vậy chúng ta nhằm tránh các thay đổi đối với mã phía client
 
 Một giải pháp yêu cầu những điều sau:
 • Một **ingest flow để** tạo text embeddings (vectors) từ văn bản trong một chỉ mục hiện có.
-• Một **search flow** mã hóa các thuật ngữ tìm kiếm thành text embeddings, và viết lại động các truy vấn kiểu match từ khóa thành một **k-NN (vector)** query để chạy tìm kiếm ngữ nghĩa trên 
-các thuật ngữ được mã hóa. Việc viết lại cho phép ứng dụng của bạn chạy minh bạch các truy vấn kiểu ngữ nghĩa thông qua các truy vấn kiểu từ khóa.
+• Một **search flow** mã hóa các thuật ngữ tìm kiếm thành text embeddings, và viết lại động các truy vấn kiểu match từ khóa thành một **k-NN (vector)** query để chạy tìm kiếm ngữ 
+nghĩa trên các thuật ngữ được mã hóa. Việc viết lại cho phép ứng dụng của bạn chạy minh bạch các truy vấn kiểu ngữ nghĩa thông qua các truy vấn kiểu từ khóa.
 
 Chúng ta cũng sẽ đánh giá một luồng xếp hạng lại giai đoạn thứ hai, sử dụng cross-encoder để xếp hạng lại kết quả vì nó có thể tăng cường chất lượng tìm kiếm.
 
-Chúng ta sẽ hoàn thành nhiệm vụ của mình thông qua flow builder. Chúng ta bắt đầu bằng cách điều hướng đến **AI Search Flows** trong **OpenSearch Dashboard**, và chọn **Semantic Search** từ danh mục mẫu.
-![Mô tả ảnh](images/BDB-5196-image001.png)
+Chúng ta sẽ hoàn thành nhiệm vụ của mình thông qua flow builder. Chúng ta bắt đầu bằng cách điều hướng đến **AI Search Flows** trong **OpenSearch Dashboard**, 
+và chọn **Semantic Search** từ danh mục mẫu.
+
+![alt text](images/BDB-5196-image001.png)
+
+Mẫu này yêu cầu chúng ta chọn một mô hình text embedding. Chúng ta sẽ sử dụng Amazon Bedrock Titan Text, đã được triển khai như một điều kiện tiên quyết. Khi mẫu được cấu hình, 
+chúng ta vào giao diện chính của trình thiết kế. Từ bản xem trước, chúng ta có thể thấy rằng mẫu bao gồm một luồng nhập và tìm kiếm được đặt trước.
+
+![alt text](images/BDB-5196-image003.png)
+
+Luồng nhập yêu cầu chúng ta cung cấp một mẫu dữ liệu. Danh mục sản phẩm của chúng ta hiện đang được phục vụ bởi một chỉ mục chứa **bộ dữ liệu sản phẩm Amazon**, vì vậy chúng ta nhập
+một mẫu dữ liệu từ chỉ mục này.
+
+![alt text](images/BDB-5196-image005.jpg)
+
+Luồng nhập bao gồm một **ML Inference Ingest Processor**, tạo ra các đầu ra mô hình học máy (ML) như embeddings (vectors) khi dữ liệu của bạn được nhập vào OpenSearch. Như đã cấu 
+hình trước đó, bộ xử lý được đặt để sử dụng Amazon Titan Text để tạo text embeddings. Chúng ta ánh xạ trường dữ liệu chứa mô tả sản phẩm của chúng ta đến trường inputText của 
+mô hình để kích hoạt tạo embedding.
+
+![alt text](images/BDB-5196-image007.jpg)
+
+Bây giờ chúng ta có thể chạy luồng nhập của mình, xây dựng một chỉ mục mới chứa các embeddings mẫu dữ liệu của chúng ta. Chúng ta có thể kiểm tra nội dung của chỉ mục để xác nhận 
+rằng các embeddings đã được tạo thành công.
+
+
+![alt text](images/BDB-5196-image009.jpg)
+
+Khi chúng ta có một chỉ mục, chúng ta có thể cấu hình luồng tìm kiếm của mình. Chúng ta sẽ bắt đầu với việc cập nhật giao diện truy vấn, được đặt trước thành một truy vấn match 
+cơ bản. Placeholder **my_text** phải được thay thế bằng mô tả sản phẩm. Với bản cập nhật này, luồng tìm kiếm của chúng ta giờ đây có thể phản hồi các truy vấn từ ứng dụng 
+kế thừa của chúng ta.
+
+![alt text](images/BDB-5196-image011.png)
+
+Luồng tìm kiếm bao gồm một **ML Inference Search Processor**. Như đã cấu hình trước đó, nó được đặt để sử dụng Amazon Titan Text. Vì nó được thêm dưới Transform query, nó được 
+áp dụng cho các yêu cầu truy vấn. Trong trường hợp này, nó sẽ biến đổi các thuật ngữ tìm kiếm thành text embeddings (một query vector). Trình thiết kế liệt kê các biến từ giao 
+diện truy vấn, cho phép chúng ta ánh xạ các thuật ngữ tìm kiếm **(query.match.text.query)**, đến trường inputText của mô hình. Text embeddings giờ đây sẽ được tạo từ các thuật ngữ 
+tìm kiếm bất cứ khi nào chỉ mục của chúng ta được truy vấn.
+
+![alt text](images/BDB-5196-image013.jpg)
+
+Tiếp theo, chúng ta cập nhật các cấu hình viết lại truy vấn, được đặt trước để viết lại truy vấn match thành một truy vấn k-NN. Chúng ta thay thế placeholder **my_embedding** bằng 
+trường truy vấn được gán cho embeddings của bạn. Lưu ý rằng chúng ta có thể viết lại điều này thành một loại truy vấn khác, bao gồm một **hybrid query**, có thể cải thiện chất 
+lượng tìm kiếm.
+
+![alt text](images/BDB-5196-image015.png)
+
+Hãy so sánh các giải pháp ngữ nghĩa và từ khóa của chúng ta từ **công cụ so sánh tìm kiếm**. Cả hai giải pháp đều có thể tìm thấy hàng hóa bóng rổ khi chúng ta tìm kiếm "basketball."
+
+![alt text](images/BDB-5196-image017.jpg)
+
+Nhưng điều gì xảy ra nếu chúng ta tìm kiếm "NBA?" Chỉ có luồng tìm kiếm ngữ nghĩa của chúng ta trả về kết quả vì nó phát hiện sự tương đồng ngữ nghĩa giữa "NBA" và "basketball."
+
+![alt text](images/BDB-5196-image019.jpg)
+
+Chúng ta đã quản lý các cải tiến, nhưng chúng ta có thể làm tốt hơn. Hãy xem liệu việc xếp hạng lại kết quả tìm kiếm của chúng ta với cross-encoder có giúp ích không. Chúng ta 
+sẽ thêm một **ML Inference Search Processor** dưới **Transform response**, để bộ xử lý áp dụng cho kết quả tìm kiếm, và chọn Cohere Rerank. Từ trình thiết kế, chúng ta thấy rằng 
+**Cohere Rerank** yêu cầu một danh sách tài liệu và ngữ cảnh truy vấn làm đầu vào. Các biến đổi dữ liệu cần thiết để đóng gói kết quả tìm kiếm thành một định dạng có thể được xử lý bởi 
+**Cohere Rerank**. Vì vậy, chúng ta áp dụng các biểu thức JSONPath để trích xuất ngữ cảnh truy vấn, làm phẳng cấu trúc dữ liệu, và đóng gói mô tả sản phẩm từ tài liệu của chúng 
+ta thành một danh sách.
+
+![alt text](images/BDB-5196-image021.png)
+
+Hãy quay lại công cụ so sánh tìm kiếm để so sánh các biến thể luồng của chúng ta. Chúng ta không quan sát thấy bất kỳ sự khác biệt có ý nghĩa nào trong tìm kiếm trước đó của 
+chúng ta cho "basketball" và "NBA." Tuy nhiên, các cải tiến được quan sát khi chúng ta tìm kiếm, "hot weather." Ở bên phải, chúng ta thấy rằng kết quả tìm kiếm thứ hai và thứ 
+năm đã di chuyển lên 32 và 62 vị trí, và trả về "sandals" rất phù hợp cho "hot weather."
+
+![alt text](images/image-47.png)
+
+Chúng ta đã sẵn sàng tiến hành sản xuất, vì vậy chúng ta **export** các luồng của mình từ cụm phát triển của chúng ta vào môi trường tiền sản xuất của chúng ta, sử dụng các 
+API quy trình làm việc để tích hợp các luồng của chúng ta vào tự động hóa, và mở rộng các quy trình thử nghiệm của chúng ta thông qua các API bulk, ingest và search.
+
+## Tình Huống 2: Sử Dụng AI Tạo Sinh Để Tái Định Nghĩa Và Nâng Cao Tìm Kiếm Hình Ảnh
+Trong tình huống này, chúng ta có hình ảnh của hàng triệu thiết kế thời trang. Chúng ta đang tìm kiếm một giải pháp tìm kiếm hình ảnh ít bảo trì. Chúng ta sẽ sử dụng AI đa 
+phương thức tạo sinh để hiện đại hóa tìm kiếm hình ảnh, loại bỏ nhu cầu lao động để duy trì thẻ hình ảnh và siêu dữ liệu khác.
+
+Giải pháp của chúng ta yêu cầu những điều sau:
+• Một **ingest flow** sử dụng một mô hình đa phương thức như Amazon Titan Multimodal Embeddings G1 để tạo image embeddings.
+• Một **search flow** tạo text embeddings với một mô hình đa phương thức, chạy một truy vấn k-NN để khớp văn bản với hình ảnh, và gửi các hình ảnh khớp đến một mô hình tạo sinh 
+như Anthropic's Claude Sonnet 3.7 có thể hoạt động trên văn bản và hình ảnh.
+
+Chúng ta sẽ bắt đầu từ mẫu **RAG with Vector Retrieval**. Với mẫu này, chúng ta có thể nhanh chóng cấu hình một luồng RAG cơ bản. Mẫu yêu cầu một embedding và mô hình ngôn ngữ lớn 
+(LLM) có thể xử lý nội dung văn bản và hình ảnh. Chúng ta sử dụng Amazon Bedrock Titan Multimodal G1 và Anthropic's Claude Sonnet 3.7, tương ứng.
+
+Từ bảng xem trước của trình thiết kế, chúng ta có thể thấy sự tương đồng giữa mẫu này và mẫu tìm kiếm ngữ nghĩa. Một lần nữa, chúng ta gieo hạt luồng nhập với một mẫu dữ liệu. 
+Giống như ví dụ trước, chúng ta sử dụng bộ dữ liệu sản phẩm Amazon ngoại trừ chúng ta thay thế mô tả sản xuất bằng hình ảnh được mã hóa base64 vì các mô hình của chúng ta yêu cầu 
+hình ảnh base64, và giải pháp này không yêu cầu văn bản. Chúng ta ánh xạ dữ liệu hình ảnh base64 đến các đầu vào Amazon Titan G1 tương ứng để tạo embeddings. Sau đó chúng ta chạy 
+luồng nhập của mình và xác nhận rằng chỉ mục của chúng ta chứa hình ảnh base64 và các embeddings tương ứng.
+
+![alt text](images/BDB-5196-image25.jpg)
+
+Các bước ban đầu để cấu hình luồng tìm kiếm này tương tự như tình huống trước: chúng ta cập nhật giao diện truy vấn, ánh xạ các trường văn bản truy vấn đến các đầu vào mô hình cho 
+ML Inference Search Processor, và sửa đổi cài đặt viết lại truy vấn. Sự khác biệt chính với luồng này là bộ xử lý phản hồi bổ sung được đặt để sử dụng Anthropic's Claude Sonnet 3.7
+để xử lý hình ảnh.
+
+Chúng ta cần cấu hình một prompt LLM bao gồm ngữ cảnh truy vấn và hướng dẫn cho LLM đóng vai trò của một cố vấn thời trang, và cung cấp bình luận về payload hình ảnh.
+
+![alt text](images/BDB-5196-image27.png)
+
+Tiếp theo, chúng ta ánh xạ prompt và trường dữ liệu hình ảnh base64 đến các đầu vào của mô hình tương ứng.
+
+
+![alt text](images/BDB-5196-image29.jpg)
+
+Hãy thử nghiệm luồng RAG đa phương thức của chúng ta bằng cách tìm kiếm "sunset colored dresses." Chúng ta quan sát các kết quả sau.
+
+![alt text](images/BDB-5196-image31.jpg)
+Chiếc váy xinh đẹp này hoàn hảo thể hiện tinh túy của hoàng hôn với hiệu ứng chuyển màu ombre tuyệt đẹp. Bắt đầu với mà
+màu hồng đào nhẹ nhàng ở phần trên, chuyển sang màu cam rực rỡ ở giữa, và kết thúc bằng màu vàng tươi ở viền váy – giống hệt như những màu sắc của bầu trời khi mặt trời lặn xuống 
+đường chân trời. Chiếc váy có thiết kế đơn giản, thoải mái với tay áo ngắn và có vẻ như có form dáng thoải mái, rộng rãi phù hợp với nhiều dáng người. Hiệu ứng nhuộm tie-dye mang đến
+phong cách bohemian, tự do hoàn hảo cho những chuyến đi mùa hè, kỳ nghỉ biển, hoặc các sự kiện tối giản thường. Tôi khuyên bạn nên chọn chiếc váy màu hoàng hôn này vì nó bắt mắt, 
+đa năng, và thể hiện ánh sáng hoàng hôn kỳ diệu có thể làm sáng bừng bất kỳ dịp nào. Những màu sắc này sẽ đặc biệt phù hợp với tông da ấm, và bạn có thể dễ dàng trang trọng hóa với
+phụ kiện vàng hoặc giữ phong cách giản dị với đôi sandal đơn giản.
+
+![alt text](images/BDB-5196-image33.jpg)
+Chiếc váy tie-dye rực rỡ này hoàn hảo thể hiện tinh túy của hoàng hôn với dải màu chuyển sắc tuyệt đẹp. Chiếc váy có những dải màu vàng óng, cam rực lửa, và hồng đậm hòa quyện với 
+nhau một cách mượt mà, gợi nhớ đến bầu trời lúc chạng vạng.Thiết kế không dây tôn lên đôi vai một cách thanh lịch, trong khi phần eo thắt tạo nên đường cong quyến rũ chảy xuống
+thành chân váy thoải mái dài đến đầu gối. Chiếc váy này sẽ là lựa chọn tuyệt vời cho các sự kiện mùa hè, kỳ nghỉ biển,hoặc những chuyến đi thường ngày. Bảng màu hoàng hôn không 
+chỉ hợp xu hướng mà còn đủ linh hoạt để kết hợp với các phụkiện màu trung tính. Tôi khuyên bạn nên chọn món đồ này vì những màu sắc bắt mắt, form dáng thoải mái, và cách nó thể 
+hiện cảm giác ấm áp, thư giãn khi ngắm nhìn hoàng hôn tuyệt đẹp.
+
+
+Không có bất kỳ siêu dữ liệu hình ảnh nào, OpenSearch tìm thấy hình ảnh của những chiếc váy màu hoàng hôn, và phản hồi với bình luận chính xác và đầy màu sắc.
+
+## Kết Luận
+AI search flow builder có sẵn trong tất cả các AWS Regions hỗ trợ OpenSearch 2.19+ trên OpenSearch Service. Để tìm hiểu thêm, tham khảo Building AI search workflows in OpenSearch Dashboards, 
+và các hướng dẫn có sẵn trên GitHub, minh họa cách tích hợp các mô hình AI khác nhau từ Amazon Bedrock, SageMaker, và các dịch vụ AI AWS và bên thứ ba khác.
 ---
 ## 👨 Về Các Tác Giả
+![alt text](images/Dylan_Tong_OpenSearch.png)
+Dylan Tong là Senior Product Manager tại Amazon Web Services. Anh ấy dẫn dắt các sáng kiến sản phẩm cho AI và machine learning (ML) trên OpenSearch bao gồm khả năng cơ sở dữ liệu 
+vector của OpenSearch. Dylan có nhiều thập kỷ kinh nghiệm làm việc trực tiếp với khách hàng và tạo ra các sản phẩm và giải pháp trong lĩnh vực cơ sở dữ liệu, phân tích và AI/ML. 
+Dylan có bằng BSc và MEng về Khoa học Máy tính từ Đại học Cornell.
+
+![alt text](images/ohltyler.jpeg)
+Tyler Ohlsen là một kỹ sư phần mềm tại Amazon Web Services tập trung chủ yếu vào các plugin OpenSearch Anomaly Detection và Flow Framework.
+
+
+![alt text](images/mingshl.jpeg)
+Mingshi Liu là một Kỹ sư Machine Learning tại OpenSearch, chủ yếu đóng góp cho OpenSearch, ML Commons và Search Processors repo. Công việc của cô tập trung vào việc phát triển và 
+tích hợp các tính năng machine learning cho công nghệ tìm kiếm và các dự án mã nguồn mở khác.
+
+
+![alt text](images/kmleung.jpeg)
+Ka Ming Leung (Ming) là một Senior UX designer tại OpenSearch, tập trung vào trải nghiệm nhà phát triển tìm kiếm được hỗ trợ bởi ML cũng như thiết kế các tính năng quan sát và quản lý cụm.
+
 
 ## 📖 Glossary - Thuật ngữ
 
