@@ -92,7 +92,8 @@ các thuật ngữ được mã hóa. Việc viết lại cho phép ứng dụng
 Chúng ta cũng sẽ đánh giá một luồng xếp hạng lại giai đoạn thứ hai, sử dụng cross-encoder để xếp hạng lại kết quả vì nó có thể tăng cường chất lượng tìm kiếm.
 
 Chúng ta sẽ hoàn thành nhiệm vụ của mình thông qua flow builder. Chúng ta bắt đầu bằng cách điều hướng đến **AI Search Flows** trong **OpenSearch Dashboard**, và chọn **Semantic Search** từ danh mục mẫu.
-![Văn bản thay thế](https://d2908q01vomqb2.cloudfront.net/b6692ea5df920cad691c20319a6fffd7a4a766b8/2025/05/02/BDB-5196-image001.png)
+
+![Biểu đồ minh họa](https://d2908q01vomqb2.cloudfront.net/b6692ea5df920cad691c20319a6fffd7a4a766b8/2025/05/02/BDB-5196-image001.png)
 ---
 ## 👨 Về Các Tác Giả
 
