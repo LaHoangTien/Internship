@@ -90,10 +90,10 @@ Quá trình dịch từ bài gốc tiếng Anh sang tiếng Việt đòi hỏi s
 
 ### Challenges trong quá trình dịch
 - **Technical Terms**: 
--"Flow builder" → Giữ nguyên + bổ sung "Trình xây dựng luồng" để đảm bảo tính nhất quán
--"Semantic search" vs "keyword search" → Cần giải thích rõ sự khác biệt: "tìm kiếm ngữ nghĩa" vs "tìm kiếm từ khóa"
--"RAG" → Giữ viết tắt + dịch đầy đủ "Tạo sinh tăng cường bằng truy xuất"
--"Middleware" → "Phần mềm trung gian" với context cụ thể về vai trò trong architecture
+  "Flow builder" → Giữ nguyên + bổ sung "Trình xây dựng luồng" để đảm bảo tính nhất quán
+  "Semantic search" vs "keyword search" → Cần giải thích rõ sự khác biệt: "tìm kiếm ngữ nghĩa" vs "tìm kiếm từ khóa"
+  "RAG" → Giữ viết tắt + dịch đầy đủ "Tạo sinh tăng cường bằng truy xuất"
+  "Middleware" → "Phần mềm trung gian" với context cụ thể về vai trò trong architecture
 - **Cultural Context**: [Context cần adapt cho VN]
 - **Complex Concepts**: [Khái niệm phức tạp và cách giải thích]
 
