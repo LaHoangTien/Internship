@@ -1,6 +1,5 @@
 ## 📝 Template bài dịch
 
-```markdown
 # Amazon OpenSearch Service Ra Mắt Flow Builder Để Thúc Đẩy Đổi Mới Tìm Kiếm AI Nhanh Chóng
 
 > **📖 Bài viết gốc**: Amazon OpenSearch Service launches flow builder to empower rapid AI search innovation 
