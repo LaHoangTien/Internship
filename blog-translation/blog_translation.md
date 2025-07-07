@@ -2,13 +2,13 @@
 
 # Amazon OpenSearch Service Ra Mắt Flow Builder Để Thúc Đẩy Đổi Mới Tìm Kiếm AI Nhanh Chóng
 
-> **📖 Bài viết gốc**: Amazon OpenSearch Service launches flow builder to empower rapid AI search innovation 
-> **👤 Tác giả**: Dylan Tong, Ka Ming Leung, Mingshi Liu, và Tyler Ohlsen 
-> **📅 Ngày xuất bản**: 02 tháng 5 năm 2025 
-> **🌐 Nguồn**: AWS Big Data Blog 
-> **👨‍💻 Người dịch**: La Hoàng Tiến - FCJ Intern  
-> **📅 Ngày dịch**: 01 tháng 07 năm 2025  
-> **⏱️ Thời gian đọc**: 15-20 phút
+**📖 Bài viết gốc**: Amazon OpenSearch Service launches flow builder to empower rapid AI search innovation 
+**👤 Tác giả**: Dylan Tong, Ka Ming Leung, Mingshi Liu, và Tyler Ohlsen 
+**📅 Ngày xuất bản**: 02 tháng 5 năm 2025 
+**🌐 Nguồn**: AWS Big Data Blog 
+**👨‍💻 Người dịch**: La Hoàng Tiến - FCJ Intern  
+**📅 Ngày dịch**: 01 tháng 07 năm 2025  
+**⏱️ Thời gian đọc**: 15-20 phút
 
 ---
 
@@ -28,10 +28,10 @@
 
 ## 📚 Mục lục
 
-- [Giới thiệu](#phần-1-giới-thiệu)
-- [Các Khái Niệm Chính Của AI Search Flow Builder](#phần-2-kiến-trúc-hệ-thống)
-- [Tình Huống 1: Kích Hoạt Tìm Kiếm Ngữ Nghĩa Trên Ứng Dụng OpenSearch Mà Không Thay Đổi Mã Phía Client](#phần-3-implementation)
-- [Tình Huống 2: Sử Dụng AI Tạo Sinh Để Tái Định Nghĩa Và Nâng Cao Tìm Kiếm Hình Ảnh](#phần-3-implementation)
+- [Giới thiệu](#Giới-thiệu)
+- [Các Khái Niệm Chính Của AI Search Flow Builder](#Các-Khái-Niệm-Chính-Của-AI-Search-Flow-Builder)
+- [Tình Huống 1: Kích Hoạt Tìm Kiếm Ngữ Nghĩa Trên Ứng Dụng OpenSearch Mà Không Thay Đổi Mã Phía Client](#Tình-Huống-1)
+- [Tình Huống 2: Sử Dụng AI Tạo Sinh Để Tái Định Nghĩa Và Nâng Cao Tìm Kiếm Hình Ảnh](#Tình-Huống-2)
 - [Kết luận](#kết-luận)
 - [Glossary - Thuật ngữ](#glossary---thuật-ngữ)
 - [Tài liệu tham khảo](#tài-liệu-tham-khảo)
@@ -178,7 +178,7 @@ Giống như ví dụ trước, chúng ta sử dụng bộ dữ liệu sản ph�
 hình ảnh base64, và giải pháp này không yêu cầu văn bản. Chúng ta ánh xạ dữ liệu hình ảnh base64 đến các đầu vào Amazon Titan G1 tương ứng để tạo embeddings. Sau đó chúng ta chạy 
 luồng nhập của mình và xác nhận rằng chỉ mục của chúng ta chứa hình ảnh base64 và các embeddings tương ứng.
 
-![alt text](images/BDB-5196-image25.jpg)
+![alt text](images/BDB-5196-image025.jpg)
 
 Các bước ban đầu để cấu hình luồng tìm kiếm này tương tự như tình huống trước: chúng ta cập nhật giao diện truy vấn, ánh xạ các trường văn bản truy vấn đến các đầu vào mô hình cho 
 ML Inference Search Processor, và sửa đổi cài đặt viết lại truy vấn. Sự khác biệt chính với luồng này là bộ xử lý phản hồi bổ sung được đặt để sử dụng Anthropic's Claude Sonnet 3.7
@@ -186,16 +186,16 @@ ML Inference Search Processor, và sửa đổi cài đặt viết lại truy v�
 
 Chúng ta cần cấu hình một prompt LLM bao gồm ngữ cảnh truy vấn và hướng dẫn cho LLM đóng vai trò của một cố vấn thời trang, và cung cấp bình luận về payload hình ảnh.
 
-![alt text](images/BDB-5196-image27.png)
+![alt text](images/BDB-5196-image027.png)
 
 Tiếp theo, chúng ta ánh xạ prompt và trường dữ liệu hình ảnh base64 đến các đầu vào của mô hình tương ứng.
 
 
-![alt text](images/BDB-5196-image29.jpg)
+![alt text](images/BDB-5196-image029.jpg)
 
 Hãy thử nghiệm luồng RAG đa phương thức của chúng ta bằng cách tìm kiếm "sunset colored dresses." Chúng ta quan sát các kết quả sau.
 
-![alt text](images/BDB-5196-image31.jpg)
+![alt text](images/BDB-5196-image031.jpg)
 Chiếc váy xinh đẹp này hoàn hảo thể hiện tinh túy của hoàng hôn với hiệu ứng chuyển màu ombre tuyệt đẹp. Bắt đầu với mà
 màu hồng đào nhẹ nhàng ở phần trên, chuyển sang màu cam rực rỡ ở giữa, và kết thúc bằng màu vàng tươi ở viền váy – giống hệt như những màu sắc của bầu trời khi mặt trời lặn xuống 
 đường chân trời. Chiếc váy có thiết kế đơn giản, thoải mái với tay áo ngắn và có vẻ như có form dáng thoải mái, rộng rãi phù hợp với nhiều dáng người. Hiệu ứng nhuộm tie-dye mang đến
@@ -203,7 +203,7 @@ phong cách bohemian, tự do hoàn hảo cho những chuyến đi mùa hè, k�
 đa năng, và thể hiện ánh sáng hoàng hôn kỳ diệu có thể làm sáng bừng bất kỳ dịp nào. Những màu sắc này sẽ đặc biệt phù hợp với tông da ấm, và bạn có thể dễ dàng trang trọng hóa với
 phụ kiện vàng hoặc giữ phong cách giản dị với đôi sandal đơn giản.
 
-![alt text](images/BDB-5196-image33.jpg)
+![alt text](images/BDB-5196-image033.jpg)
 Chiếc váy tie-dye rực rỡ này hoàn hảo thể hiện tinh túy của hoàng hôn với dải màu chuyển sắc tuyệt đẹp. Chiếc váy có những dải màu vàng óng, cam rực lửa, và hồng đậm hòa quyện với 
 nhau một cách mượt mà, gợi nhớ đến bầu trời lúc chạng vạng.Thiết kế không dây tôn lên đôi vai một cách thanh lịch, trong khi phần eo thắt tạo nên đường cong quyến rũ chảy xuống
 thành chân váy thoải mái dài đến đầu gối. Chiếc váy này sẽ là lựa chọn tuyệt vời cho các sự kiện mùa hè, kỳ nghỉ biển,hoặc những chuyến đi thường ngày. Bảng màu hoàng hôn không 
@@ -313,7 +313,10 @@ Quá trình dịch từ bài gốc tiếng Anh sang tiếng Việt đòi hỏi s
 Bài dịch này được thực hiện trong khuôn khổ **FCJ Internship Program**. 
 
 **📧 Liên hệ**:  lahoangtien1418@gmail.com
-**💬 Feedback**: Mọi góp ý để cải thiện chất lượng dịch thuật xin gửi về email trên  
+
+**💬 Feedback**: Mọi góp ý để cải thiện chất lượng dịch thuật xin gửi về email trên
+
 **🔄 Updates**: Bài dịch sẽ được cập nhật dựa trên feedback từ cộng đồng
-**© 2025 - Bản dịch thuộc về La Hoàng Tiến. Vui lòng credit khi sử dđồng**
+
+© 2025 - Bản dịch thuộc về La Hoàng Tiến. Vui lòng credit khi sử dụng
 ---
